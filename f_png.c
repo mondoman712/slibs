@@ -1,10 +1,3 @@
-#include <stdio.h>
-#include <stdlib.h>
-
-#include <GL/glew.h>
-#include <zlib.h>
-#include <png.h>
-
 #include "f_png.h"
 
 #define PNG_SIGBYTES 8

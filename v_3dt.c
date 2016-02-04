@@ -10,12 +10,6 @@
  * 3 	7 	11 	15
  */
 
-#include <math.h>
-#include <assert.h>
-
-#include <GL/glew.h>
-
-#include "vects.h"
 #include "v_3dt.h"
 
 /*

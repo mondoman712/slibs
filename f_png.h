@@ -1,7 +1,11 @@
 #ifndef _F_PNG_H
 #define _F_PNG_H
 
+#include <stdio.h>
+#include <stdlib.h>
+
 #include <GL/glew.h>
+#include <zlib.h>
 #include <png.h>
 
 typedef struct {

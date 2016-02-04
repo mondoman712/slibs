@@ -1,6 +1,3 @@
-#include <math.h>
-#include <GL/glew.h>
-
 #include "vects.h"
 
 /*

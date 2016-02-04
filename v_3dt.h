@@ -1,6 +1,10 @@
 #ifndef _TRANS_H
 #define _TRANS_H
 
+#include <assert.h>
+
+#include "vects.h"
+
 /*
  * Defines a matrix transformation to move the camera position
  */

@@ -1,6 +1,9 @@
 #ifndef _VECTS_H
 #define _VECTS_H
 
+#include <math.h>
+#include <GL/glew.h>
+
 typedef struct {
 	GLfloat x;
 	GLfloat y;
