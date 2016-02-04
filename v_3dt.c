@@ -15,7 +15,7 @@
 
 #include <GL/glew.h>
 
-#include "trans.h"
+#include "v_3dt.h"
 
 /*
  * finds the modulus of a 1x3 vector
