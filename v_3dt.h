@@ -1,17 +1,6 @@
 #ifndef _TRANS_H
 #define _TRANS_H
 
-typedef struct {
-	GLfloat x;
-	GLfloat y;
-	GLfloat z;
-} vec3;
-
-/*
- * Deposits the values in a vec3 into the first 3 places in an array
- */
-void vec3_array (vec3 in, GLfloat * array);
-
 /*
  * Defines a matrix transformation to move the camera position
  */
