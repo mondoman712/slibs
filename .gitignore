@@ -1,0 +1,7 @@
+*.swp
+emetic
+*.out
+scrn*.png
+*.o
+*\#*
+*.png
