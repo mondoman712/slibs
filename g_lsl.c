@@ -1,4 +1,10 @@
+#include <string.h>
+#include <stdio.h>
+
 #include <GL/glew.h>
+
+#define SHADER_DIR "src/shaders/"
+#define SHADER_EXT ".glsl"
 
 /*
  * Reads and compiles a .glsl shader file in the shaders folder, from just the
