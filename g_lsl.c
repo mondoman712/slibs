@@ -2,6 +2,9 @@
 #include <stdio.h>
 
 #include <GL/glew.h>
+#include <SDL2/SDL.h>
+
+#include "f_png.h"
 
 #define SHADER_DIR "src/shaders/"
 #define SHADER_EXT ".glsl"
@@ -60,4 +63,76 @@ GLuint create_shader (const GLenum shader_type, const char * filename)
 	}
 
 	return shader;
+}
+
+/*
+ * Create filename for screenshot
+ */
+static char * ss_filename (void)
+{
+	struct tm * tm;
+	time_t t;
+	char strtime[128];
+
+	char * filename = malloc(128 * sizeof(char));
+	GLushort i = 1;
+	
+	/* Create filename based on time */
+	t = time(NULL);
+	tm = localtime(&t);
+	strftime(strtime, sizeof(strtime), "%Y-%m-%d-%H-%M-%S", tm);
+	sprintf(filename, "screenshot-%s.png", strtime);
+
+	/* If another file of this name exists add digits to the end */
+	while (access(filename, F_OK) != -1)
+		sprintf(filename, "screenshot-%s-%d.png", strtime, i++);
+
+	return filename;
+}
+
+/*
+ * Takes a screenshot, saves it to scrn-yyyy-mm-dd-hh-mm-ss(-x).png
+ */
+GLuint take_screenshot (GLuint w, GLuint h)
+{
+	GLuint ret = 0;
+	GLubyte * pix = malloc(w * h * 3 * sizeof(GLubyte));
+	char * filename;
+
+	/* Get pixel data from OpenGL */
+	glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 0, 0, w, h);
+	glPixelStorei(GL_PACK_ALIGNMENT, 1);
+	glReadPixels(0, 0, w, h, GL_RGB, GL_UNSIGNED_BYTE, (GLvoid *) pix);
+
+	/* Get filename */
+	filename = ss_filename();
+	
+	/* Save the file and print out a message */
+	if (access(filename, F_OK) == -1) {
+		if (save_png(filename, pix, w, h)) { 
+			ret = 1;
+			fprintf(stderr, "Screenshot Failed\n");
+		} else {
+			printf("\nTaken screenshot %s\n", filename);
+		}
+	}
+
+	free(pix);
+	free(filename);
+
+	return ret;
+}
+
+/*
+ * Handles window resize event
+ */
+void window_resize (SDL_Window * window, GLuint * width, GLuint * height)
+{
+	GLint w, h;
+
+	SDL_GetWindowSize(window, &w, &h);
+
+	glViewport(0, 0, w, h);
+	if (w > 0) *width = w;
+	if (h > 0) *height = h;
 }
