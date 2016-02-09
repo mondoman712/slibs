@@ -1,4 +1,10 @@
 #include <GL/glew.h>
+#include <SDL2/SDL.h>
+
+typedef struct {
+	SDL_Window * win;
+	SDL_GLContext glc;
+} Window;
 
 /*
  * Reads and compiles a .glsl shader file in the shaders folder, from just the
@@ -15,3 +21,8 @@ GLuint take_screenshot (GLuint w, GLuint h);
  * Handles window resize event
  */
 void window_resize (SDL_Window * window, GLuint * width, GLuint * height);
+
+/*
+ * Creates an SDL window with gl context
+ */
+Window create_window (int w, int h, char * title);

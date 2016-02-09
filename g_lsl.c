@@ -5,9 +5,13 @@
 #include <SDL2/SDL.h>
 
 #include "f_png.h"
+#include "g_lsl.h"
 
 #define SHADER_DIR "src/shaders/"
 #define SHADER_EXT ".glsl"
+
+#define GL_MAJOR_VER 3
+#define GL_MINOR_VER 3
 
 /*
  * Reads and compiles a .glsl shader file in the shaders folder, from just the
@@ -135,4 +139,57 @@ void window_resize (SDL_Window * window, GLuint * width, GLuint * height)
 	glViewport(0, 0, w, h);
 	if (w > 0) *width = w;
 	if (h > 0) *height = h;
+}
+
+/*
+ * Creates an SDL window with gl context
+ */
+Window create_window (int w, int h, char * title)
+{
+	Window win;
+	win.win = NULL;
+	win.glc = NULL;
+
+	if (SDL_Init(SDL_INIT_VIDEO)) {
+		fprintf(stderr, "Failed to initialise SDL\n");
+		return win;
+	}
+
+	win.win = SDL_CreateWindow(title,
+			SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+			w, h,
+			SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL
+				| SDL_WINDOW_RESIZABLE);
+
+	if (win.win == NULL) {
+		fprintf(stderr, "Failed to create SDL window\n");
+		return win;
+	}
+
+	win.glc = SDL_GL_CreateContext(win.win);
+	if (win.glc == NULL) {
+		fprintf(stderr, "Failed to create OpenGL context\n");
+		return win;
+	}
+
+	const unsigned char * version = glGetString(GL_VERSION);
+	if (version == NULL) {
+		fprintf(stderr, "Failed to get GL version\n");
+		return win;
+	} else {
+		printf("GL version is: %s\n", version);
+	}
+
+	SDL_GL_MakeCurrent(win.win, win.glc);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, GL_MAJOR_VER);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, GL_MINOR_VER);
+
+	glewExperimental = GL_TRUE;
+	GLenum glew_status = glewInit();
+	if (glew_status) {
+		fprintf(stderr, "Error %s\n", glewGetErrorString(glew_status));
+		return win;
+	}
+
+	return win;
 }
