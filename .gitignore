@@ -1,7 +1,8 @@
 *.swp
-emetic
+test
 *.out
 scrn*.png
 *.o
 *\#*
 *.png
+*.obj
