@@ -130,25 +130,28 @@ GLuint take_screenshot (GLuint w, GLuint h)
 /*
  * Handles window resize event
  */
-void window_resize (SDL_Window * window, GLuint * width, GLuint * height)
+void window_resize (Window * win)
 {
 	GLint w, h;
 
-	SDL_GetWindowSize(window, &w, &h);
+	SDL_GetWindowSize(win->win, &w, &h);
 
 	glViewport(0, 0, w, h);
-	if (w > 0) *width = w;
-	if (h > 0) *height = h;
+	if (w > 0) win->w = w;
+	if (h > 0) win->h = h;
 }
 
 /*
  * Creates an SDL window with gl context
  */
-Window create_window (int w, int h, char * title)
+Window create_window (GLushort w, GLushort h, char * title)
 {
 	Window win;
 	win.win = NULL;
 	win.glc = NULL;
+
+	win.w = w;
+	win.h = h;
 
 	if (SDL_Init(SDL_INIT_VIDEO)) {
 		fprintf(stderr, "Failed to initialise SDL\n");

@@ -4,6 +4,8 @@
 typedef struct {
 	SDL_Window * win;
 	SDL_GLContext glc;
+	GLushort w;
+	GLushort h;
 } Window;
 
 /*
@@ -20,9 +22,9 @@ GLuint take_screenshot (GLuint w, GLuint h);
 /*
  * Handles window resize event
  */
-void window_resize (SDL_Window * window, GLuint * width, GLuint * height);
+void window_resize (Window * win);
 
 /*
  * Creates an SDL window with gl context
  */
-Window create_window (int w, int h, char * title);
+Window create_window (GLushort w, GLushort h, char * title);
