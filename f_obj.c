@@ -1,9 +1,9 @@
 #include "f_obj.h"
 
-int check_prefix (const char * str, const char * pre)
+static int check_prefix (const char * str, const char * pre)
 {
-	int i;
-	int n = strlen(pre);
+	unsigned int i;
+	size_t n = strlen(pre);
 
 	if (n > strlen(str)) return 0;
 
@@ -13,6 +13,30 @@ int check_prefix (const char * str, const char * pre)
 	}
 
 	return 1;
+}
+
+static void read_vect (GLfloat * buff, char * vect, int c)
+{
+	char * v = strtok(vect, " ");
+	int i = 0;
+
+	for (i = 0; i < c; i++) {
+		if (v == NULL) break;
+
+		v = strtok(NULL, " ");
+		*(buff + i) = atof(v);
+	}
+}
+
+static void read_face (GLuint * buff, char * face)
+{
+	char * f = strtok(face, " /");
+	int i;
+	
+	for (i = 0; i < 9; i++) {
+		f = strtok(NULL, " /");
+		buff[i] = atoi(f) - 1;
+	}
 }
 
 GLuint read_obj (const char * filename, GLfloat ** vertices, char ** mtl_loc)
@@ -39,17 +63,22 @@ GLuint read_obj (const char * filename, GLfloat ** vertices, char ** mtl_loc)
 	GLuint * faces = malloc(fc * 9 * sizeof(GLuint));
 	GLfloat * verts = malloc(vc * 3 * sizeof(GLfloat));
 	GLfloat * norms = malloc(vnc * 3 * sizeof(GLfloat));
-	GLfloat * texns = malloc(vtc * 3 * sizeof(GLfloat));
+	GLfloat * texns = malloc(vtc * 2 * sizeof(GLfloat));
+	fc = 0, vc = 0, vtc = 0, vnc = 0;
 
 	while (fgets(line, sizeof(line), objf)) {
 		if (check_prefix(line, "f ")) {
-
+			read_face((faces + fc), line);
+			fc += 9;
 		} else if (check_prefix(line, "v ")) {
-
+			read_vect((verts + vc), line, 3);
+			vc += 3;
 		} else if (check_prefix(line, "vn ")) {
-
+			read_vect((norms + vnc), line, 3);
+			vnc += 3;
 		} else if (check_prefix(line, "vt ")) {
-
+			read_vect((texns + vtc), line, 2);
+			vtc += 2;
 		}
 	}
 
