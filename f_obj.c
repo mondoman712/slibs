@@ -1,5 +1,7 @@
 #include "f_obj.h"
 
+#define BUFFSIZE 256
+
 static int check_prefix (const char * str, const char * pre)
 {
 	unsigned int i;
@@ -42,7 +44,7 @@ static void read_face (GLuint * buff, char * face)
 GLuint read_obj (const char * filename, GLfloat ** vertices, char ** mtl_loc)
 {
 	int fc = 0, vc = 0, vtc = 0, vnc = 0;
-	char line[256];
+	char line[BUFFSIZE];
 
 	FILE * objf = fopen(filename, "r"); 
 	if (objf == NULL) {
@@ -79,6 +81,9 @@ GLuint read_obj (const char * filename, GLfloat ** vertices, char ** mtl_loc)
 		} else if (check_prefix(line, "vt ")) {
 			read_vect((texns + vtc), line, 2);
 			vtc += 2;
+		} else if (check_prefix(line, "mtllib ")) {
+			strtok(line, " ");
+			strcpy(*mtl_loc, strtok(NULL, " "));
 		}
 	}
 
@@ -98,6 +103,8 @@ GLuint read_obj (const char * filename, GLfloat ** vertices, char ** mtl_loc)
 		*(ret + i + 7) = norms[faces[i + 5] * 3 + 2];
 		vc++;
 	}
+
+	*vertices = ret;
 
 	return vc;
 }
