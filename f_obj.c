@@ -84,5 +84,20 @@ GLuint read_obj (const char * filename, GLfloat ** vertices, char ** mtl_loc)
 
 	fclose(objf);
 
-	return fc;
+	GLfloat * ret = malloc(fc * sizeof(GLfloat));
+	vc = 0;
+	int i;
+	for (i = 0; i < fc; i += 8) {
+		*(ret + i) = verts[faces[i] * 3];
+		*(ret + i + 1) = verts[faces[i] * 3 + 1];
+		*(ret + i + 2) = verts[faces[i] * 3 + 2];
+		*(ret + i + 3) = texns[faces[i + 3] * 2];
+		*(ret + i + 4) = texns[faces[i + 3] * 2 + 1];
+		*(ret + i + 5) = norms[faces[i + 5] * 3];
+		*(ret + i + 6) = norms[faces[i + 5] * 3 + 1];
+		*(ret + i + 7) = norms[faces[i + 5] * 3 + 2];
+		vc++;
+	}
+
+	return vc;
 }
