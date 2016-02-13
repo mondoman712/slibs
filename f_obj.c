@@ -41,7 +41,7 @@ static void read_face (GLuint * buff, char * face)
 	}
 }
 
-GLuint read_obj (const char * filename, GLfloat ** vertices, char ** mtl_loc)
+GLuint read_obj1 (const char * filename, GLfloat ** vertices, char ** mtl_loc)
 {
 	int fc = 0, vc = 0, vtc = 0, vnc = 0;
 	char line[BUFFSIZE];
@@ -103,6 +103,11 @@ GLuint read_obj (const char * filename, GLfloat ** vertices, char ** mtl_loc)
 		*(ret + i + 7) = norms[faces[i + 5] * 3 + 2];
 		vc++;
 	}
+
+	free(verts);
+	free(faces);
+	free(norms);
+	free(texns);
 
 	*vertices = ret;
 
