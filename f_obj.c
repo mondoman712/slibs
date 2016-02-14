@@ -71,7 +71,7 @@ GLuint read_obj (const char * filename, GLfloat ** vertices, char ** mtl_loc)
 	while (fgets(line, sizeof(line), objf)) {
 		if (check_prefix(line, "f ")) {
 			read_face((faces + fc), line);
-			fc += 9;
+			fc += 1;
 		} else if (check_prefix(line, "v ")) {
 			read_vect((verts + vc), line, 3);
 			vc += 3;
@@ -94,10 +94,10 @@ GLuint read_obj (const char * filename, GLfloat ** vertices, char ** mtl_loc)
 
 	fclose(objf);
 
-	GLfloat * ret = malloc(fc * sizeof(GLfloat));
+	GLfloat * ret = malloc(fc * 3 * 8 * sizeof(GLfloat));
 	vc = 0;
 	int i;
-	for (i = 0; i < fc; i += 8) {
+	for (i = 0; i < fc * 8; i += 8) {
 		*(ret + i) = verts[faces[i] * 3];
 		*(ret + i + 1) = verts[faces[i] * 3 + 1];
 		*(ret + i + 2) = verts[faces[i] * 3 + 2];
