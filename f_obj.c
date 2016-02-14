@@ -82,6 +82,7 @@ GLuint read_obj (const char * filename, GLfloat ** vertices, char ** mtl_loc)
 			read_vect((texns + vtc), line, 2);
 			vtc += 2;
 		} else if (check_prefix(line, "mtllib ")) {
+			*mtl_loc = malloc(256);
 			strtok(line, " ");
 			strcpy(*mtl_loc, strtok(NULL, " "));
 
@@ -98,14 +99,14 @@ GLuint read_obj (const char * filename, GLfloat ** vertices, char ** mtl_loc)
 	vc = 0;
 	int i;
 	for (i = 0; i < fc; i += 8) {
-		*(ret + i) = verts[faces[i] * 3];
-		*(ret + i + 1) = verts[faces[i] * 3 + 1];
-		*(ret + i + 2) = verts[faces[i] * 3 + 2];
-		*(ret + i + 3) = texns[faces[i + 3] * 2];
-		*(ret + i + 4) = texns[faces[i + 3] * 2 + 1];
-		*(ret + i + 5) = norms[faces[i + 5] * 3];
-		*(ret + i + 6) = norms[faces[i + 5] * 3 + 1];
-		*(ret + i + 7) = norms[faces[i + 5] * 3 + 2];
+		*(ret + i) = *(verts + faces[i] * 3);
+		*(ret + i + 1) = *(verts + faces[i] * 3 + 1);
+		*(ret + i + 2) = *(verts + faces[i] * 3 + 2);
+		*(ret + i + 3) = *(texns + faces[i + 3] * 2);
+		*(ret + i + 4) = *(texns + faces[i + 3] * 2 + 1);
+		*(ret + i + 5) = *(norms + faces[i + 5] * 3);
+		*(ret + i + 6) = *(norms + faces[i + 5] * 3 + 1);
+		*(ret + i + 7) = *(norms + faces[i + 5] * 3 + 2);
 		vc++;
 	}
 
