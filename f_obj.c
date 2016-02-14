@@ -41,7 +41,7 @@ static void read_face (GLuint * buff, char * face)
 	}
 }
 
-GLuint read_obj1 (const char * filename, GLfloat ** vertices, char ** mtl_loc)
+GLuint read_obj (const char * filename, GLfloat ** vertices, char ** mtl_loc)
 {
 	int fc = 0, vc = 0, vtc = 0, vnc = 0;
 	char line[BUFFSIZE];
@@ -84,6 +84,11 @@ GLuint read_obj1 (const char * filename, GLfloat ** vertices, char ** mtl_loc)
 		} else if (check_prefix(line, "mtllib ")) {
 			strtok(line, " ");
 			strcpy(*mtl_loc, strtok(NULL, " "));
+
+			/* Remove trailing \n from string */
+			char * pos;
+			if ((pos = strchr(*mtl_loc, '\n')) != NULL)
+				*pos = '\0';
 		}
 	}
 
@@ -104,8 +109,8 @@ GLuint read_obj1 (const char * filename, GLfloat ** vertices, char ** mtl_loc)
 		vc++;
 	}
 
-	free(verts);
 	free(faces);
+	free(verts);
 	free(norms);
 	free(texns);
 

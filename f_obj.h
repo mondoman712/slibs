@@ -7,6 +7,6 @@
 
 #include <GL/glew.h>
 
-GLuint read_obj1 (const char * filename, GLfloat ** vertices, char ** mtl_loc);
+GLuint read_obj (const char * filename, GLfloat ** vertices, char ** mtl_loc);
 
 #endif /* _F_OBJ_H */
