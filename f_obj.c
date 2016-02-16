@@ -71,7 +71,7 @@ GLuint read_obj (const char * filename, GLfloat ** vertices, char ** mtl_loc)
 	while (fgets(line, sizeof(line), objf)) {
 		if (check_prefix(line, "f ")) {
 			read_face((faces + fc), line);
-			fc += 1;
+			fc += 9;
 		} else if (check_prefix(line, "v ")) {
 			read_vect((verts + vc), line, 3);
 			vc += 3;
@@ -94,19 +94,19 @@ GLuint read_obj (const char * filename, GLfloat ** vertices, char ** mtl_loc)
 
 	fclose(objf);
 
-	GLfloat * ret = malloc(fc * 3 * 8 * sizeof(GLfloat));
+	GLfloat * ret = malloc(fc * 24 * sizeof(GLfloat));
 	vc = 0;
-	int i;
-	for (i = 0; i < fc * 8; i += 8) {
-		*(ret + i) = verts[faces[i] * 3];
-		*(ret + i + 1) = verts[faces[i] * 3 + 1];
-		*(ret + i + 2) = verts[faces[i] * 3 + 2];
-		*(ret + i + 3) = texns[faces[i + 3] * 2];
-		*(ret + i + 4) = texns[faces[i + 3] * 2 + 1];
-		*(ret + i + 5) = norms[faces[i + 5] * 3];
-		*(ret + i + 6) = norms[faces[i + 5] * 3 + 1];
-		*(ret + i + 7) = norms[faces[i + 5] * 3 + 2];
-		vc++;
+	int i, j = 0;
+	for (i = 0; i < fc / 3 * 8; i += 8) {
+		*(ret + i) = verts[faces[j] * 3];
+		*(ret + i + 1) = verts[faces[j] * 3 + 1];
+		*(ret + i + 2) = verts[faces[j] * 3 + 2];
+		*(ret + i + 3) = texns[faces[j + 1] * 2];
+		*(ret + i + 4) = texns[faces[j + 1] * 2 + 1];
+		*(ret + i + 5) = norms[faces[j + 2] * 3];
+		*(ret + i + 6) = norms[faces[j + 2] * 3 + 1];
+		*(ret + i + 7) = norms[faces[j + 2] * 3 + 2];
+		vc++; j += 3;
 	}
 
 	free(faces);
@@ -116,5 +116,6 @@ GLuint read_obj (const char * filename, GLfloat ** vertices, char ** mtl_loc)
 
 	*vertices = ret;
 
-	return vc;
+	printf("%d\n", vc);
+	return vc * 8;
 }
