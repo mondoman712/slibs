@@ -116,6 +116,5 @@ GLuint read_obj (const char * filename, GLfloat ** vertices, char ** mtl_loc)
 
 	*vertices = ret;
 
-	printf("%d\n", vc);
 	return vc * 8;
 }
