@@ -2,6 +2,9 @@
 
 #define BUFFSIZE 256
 
+/*
+ * Compares first strlen(pre) chars of str with pre
+ */
 static int check_prefix (const char * str, const char * pre)
 {
 	unsigned int i;
@@ -17,6 +20,9 @@ static int check_prefix (const char * str, const char * pre)
 	return 1;
 }
 
+/*
+ * Reads a vector line of an obj file and turns it into an array of numbers
+ */
 static void read_vect (GLfloat * buff, char * vect, int c)
 {
 	char * v = strtok(vect, " ");
@@ -30,6 +36,9 @@ static void read_vect (GLfloat * buff, char * vect, int c)
 	}
 }
 
+/*
+ * Reads a face line and turns it into an array of numbers
+ */
 static void read_face (GLuint * buff, char * face)
 {
 	char * f = strtok(face, " /");
@@ -41,6 +50,9 @@ static void read_face (GLuint * buff, char * face)
 	}
 }
 
+/*
+ * Reads an obj file and return all of the vertices in an array
+ */
 GLuint read_obj (const char * filename, GLfloat ** vertices, char ** mtl_loc)
 {
 	int fc = 0, vc = 0, vtc = 0, vnc = 0;
