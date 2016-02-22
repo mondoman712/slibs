@@ -39,12 +39,12 @@ static void read_vect (GLfloat * buff, char * vect, int c)
 /*
  * Reads a face line and turns it into an array of numbers
  */
-static void read_face (GLuint * buff, char * face)
+static void read_face (GLuint * buff, char * face, int c)
 {
 	char * f = strtok(face, " /");
 	int i;
 	
-	for (i = 0; i < 9; i++) {
+	for (i = 0; i < c; i++) {
 		f = strtok(NULL, " /");
 		buff[i] = atoi(f) - 1;
 	}
@@ -74,16 +74,22 @@ GLuint read_obj (const char * filename, GLfloat ** vertices, char ** mtl_loc)
 
 	rewind(objf);
 
-	GLuint * faces = malloc(fc * 9 * sizeof(GLuint));
+	int fn = 6;
+	GLfloat * texns = NULL;
+	if (vtc != 0) {
+		fn = 9;
+		texns = malloc(vtc * 2 * sizeof(GLfloat));
+	}
+	GLuint * faces = malloc(fc * fn * sizeof(GLuint));
 	GLfloat * verts = malloc(vc * 3 * sizeof(GLfloat));
 	GLfloat * norms = malloc(vnc * 3 * sizeof(GLfloat));
-	GLfloat * texns = malloc(vtc * 2 * sizeof(GLfloat));
+
 	fc = 0, vc = 0, vtc = 0, vnc = 0;
 
 	while (fgets(line, sizeof(line), objf)) {
 		if (check_prefix(line, "f ")) {
-			read_face((faces + fc), line);
-			fc += 9;
+			read_face((faces + fc), line, fn);
+			fc += fn;
 		} else if (check_prefix(line, "v ")) {
 			read_vect((verts + vc), line, 3);
 			vc += 3;
@@ -105,20 +111,34 @@ GLuint read_obj (const char * filename, GLfloat ** vertices, char ** mtl_loc)
 	}
 
 	fclose(objf);
-
 	GLfloat * ret = malloc(fc * 24 * sizeof(GLfloat));
-	vc = 0;
+
 	int i, j = 0;
-	for (i = 0; i < fc / 3 * 8; i += 8) {
-		*(ret + i) = verts[faces[j] * 3];
-		*(ret + i + 1) = verts[faces[j] * 3 + 1];
-		*(ret + i + 2) = verts[faces[j] * 3 + 2];
-		*(ret + i + 3) = texns[faces[j + 1] * 2];
-		*(ret + i + 4) = texns[faces[j + 1] * 2 + 1];
-		*(ret + i + 5) = norms[faces[j + 2] * 3];
-		*(ret + i + 6) = norms[faces[j + 2] * 3 + 1];
-		*(ret + i + 7) = norms[faces[j + 2] * 3 + 2];
-		vc++; j += 3;
+	vc = 0;
+	if (fn == 6) {
+		for (i = 0; i < fc / 3 * 8; i += 8) {
+			*(ret + i) = verts[faces[j] * 3];
+			*(ret + i + 1) = verts[faces[j] * 3 + 1];
+			*(ret + i + 2) = verts[faces[j] * 3 + 2];
+			*(ret + i + 3) = 0.0;
+			*(ret + i + 4) = 0.0;
+			*(ret + i + 5) = norms[faces[j + 1] * 3];
+			*(ret + i + 6) = norms[faces[j + 1] * 3 + 1];
+			*(ret + i + 7) = norms[faces[j + 1] * 3 + 2];
+			vc++; j += 2;
+		}
+	} else {
+		for (i = 0; i < fc / 3 * 8; i += 8) {
+			*(ret + i) = verts[faces[j] * 3];
+			*(ret + i + 1) = verts[faces[j] * 3 + 1];
+			*(ret + i + 2) = verts[faces[j] * 3 + 2];
+			*(ret + i + 3) = texns[faces[j + 1] * 2];
+			*(ret + i + 4) = texns[faces[j + 1] * 2 + 1];
+			*(ret + i + 5) = norms[faces[j + 2] * 3];
+			*(ret + i + 6) = norms[faces[j + 2] * 3 + 1];
+			*(ret + i + 7) = norms[faces[j + 2] * 3 + 2];
+			vc++; j += 3;
+		}
 	}
 
 	free(faces);
