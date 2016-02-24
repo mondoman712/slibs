@@ -120,8 +120,8 @@ GLuint read_obj (const char * filename, GLfloat ** vertices, char ** mtl_loc)
 			*(ret + i) = verts[faces[j] * 3];
 			*(ret + i + 1) = verts[faces[j] * 3 + 1];
 			*(ret + i + 2) = verts[faces[j] * 3 + 2];
-			*(ret + i + 3) = 0.0;
-			*(ret + i + 4) = 0.0;
+			*(ret + i + 3) = i;
+			*(ret + i + 4) = i / 2;
 			*(ret + i + 5) = norms[faces[j + 1] * 3];
 			*(ret + i + 6) = norms[faces[j + 1] * 3 + 1];
 			*(ret + i + 7) = norms[faces[j + 1] * 3 + 2];
