@@ -1,30 +1,20 @@
 CC = gcc
 CSTD = c99
 
-GUILE_CFLAGS = $(shell pkg-config guile-2.0 --cflags)
 SDL_CFLAGS = $(shell sdl2-config --cflags)
-CFLAGS = -g -W -Wall -pedantic -std=$(CSTD) $(SDL_CFLAGS) $(GUILE_CFLAGS)
+CF = $(CFLAGS) -std=c99
 
-GUILE_LDFLAGS = $(shell pkg-config guile-2.0 --libs)
-SDL_LDFLAGS = $(shell sdl2-config --libs)
-LDFLAGS = -lGL -lGLEW -lm -lpng -lz  $(SDL_LDFLAGS) $(GUILE_LDFLAGS)
+f_obj.o: f_obj.c f_obj.h
+	$(CC) $(CF) -c -o $@ $<
 
-SOURCES = $(shell find . -name '*.c')
-DEPS = $(shell find . -name '*.h')
-OBJECTS = $(patsubst %.c,%.o,$(SOURCES))
-EXECUTABLE = test
+f_png.o: f_png.c f_png.h
+	$(CC) $(CF) -c -o $@ $<
 
-$(EXECUTABLE): pre $(OBJECTS)
-	@$(CC) $(LDFLAGS) $(OBJECTS) -o $@
+g_lsl.o: g_lsl.c g_lsl.h
+	$(CC) $(CF) $(SDL_CFLAGS) -c -o $@ $<
 
-pre:
-	@echo -e "C compiler: \t" $(CC) 
-	@echo -e "C flags: \t" $(CFLAGS)
-	@echo -e "Library flags: \t" $(LDFLAGS)
+v_3dt.o: v_3dt.c v_3dt.h
+	$(CC) $(CF) -c -o $@ $<
 
-%.o: %.c $(DEPS)
-	@echo "Building" $@
-	@$(CC) $(CFLAGS) -c -o $@ $<
-
-clean:
-	rm $(OBJECTS) $(EXECUTABLE)
+vects.o: vects.c vects.h
+	$(CC) $(CF) -c -o $@ $<
