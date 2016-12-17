@@ -161,8 +161,7 @@ Window create_window (GLushort w, GLushort h, char * title)
 	win.win = SDL_CreateWindow(title,
 			SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
 			w, h,
-			SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL
-				| SDL_WINDOW_RESIZABLE);
+			SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);
 
 	if (win.win == NULL) {
 		fprintf(stderr, "Failed to create SDL window\n");
