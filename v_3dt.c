@@ -144,6 +144,30 @@ void perspective (GLfloat fovy, GLfloat asp, GLfloat znear, GLfloat zfar,
 	*(mat4 + 15) = 0;
 }
 
+void ortholinear (GLfloat left, GLfloat right, GLfloat bottom, GLfloat top,
+	       	GLfloat near, GLfloat far, GLfloat * mat4)
+{
+	*mat4 = 2 / (right - left);
+	*(mat4 + 1) = 0;
+	*(mat4 + 2) = 0;
+	*(mat4 + 3) = 0;
+
+	*(mat4 + 4) = 0;
+	*(mat4 + 5) = 2 / (top - bottom);
+	*(mat4 + 6) = 0;
+	*(mat4 + 7) = 0;
+
+	*(mat4 + 8) = 0;
+	*(mat4 + 9) = 0;
+	*(mat4 + 10) = -2 / (far - near); 
+	*(mat4 + 11) = 0;
+
+	*(mat4 + 12) = - (right + left) / (right - left);
+	*(mat4 + 13) = - (top + bottom) / (top - bottom);
+	*(mat4 + 14) = - (far + near) / (far - near);
+	*(mat4 + 15) = 1;
+}
+
 /*
  * Defines a matrix transformation to rotate around the x axis
  */
